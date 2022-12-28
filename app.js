@@ -1,6 +1,6 @@
 import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 import { SMALLESTMAZE, BIGMAZE } from './maps/maze-maps.js';
-import { MAP_TILE_SYMBOLS, DIRECTIONS, CHARACTER_SYMBOLS } from '../../lib/Constants.js';
+import { MAP_TILE_SYMBOLS, DIRECTIONS, CHARACTER_SYMBOLS } from './lib/Constants.js';
 import { TileFactory } from './store/tile-factory.js';
 import { MapLocationModel, Model, MapModel } from './store/models/index.js';
 import { ControlBarView } from './view/control-bar.view.js';
