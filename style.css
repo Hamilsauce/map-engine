@@ -1,0 +1,124 @@
+:root {
+  --mediumgray0: #232426;
+  --mediumgray: #232426;
+  --darkgray: #171717;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  z-index: 0;
+}
+
+
+html {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--mediumgray);
+}
+
+#app-header {
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: minmax(64px, auto) 1fr minmax(64px, auto);
+  /* justify-items: center; */
+  gap: 0px;
+  padding: 8px;
+}
+
+#app-body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  gap: 0px;
+  overflow-y: scroll;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
+  /* overflow-y: scroll; */
+}
+
+#maze-display {
+  /* width: 100%; */
+  /* height: 100%; */
+  padding: 6px;
+  background: #313131;
+  color: #C9C9C9;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#controls {
+  display: grid;
+  /* grid-template-rows: 50px; */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+#move-count {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+button {
+  width: 100%;
+  height: 100%;
+  background: #14141694;
+  border: 1px solid #5F5F5F;
+  border-radius: 3px;
+  color: #EFEFEF;
+  font-size: 24px;
+  /* transition: 0.2s; */
+}
+
+.app-button:active {
+  /* background: #3F415320; */
+  backdrop-filter: brightness(250%);
+}
+
+.app-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 8px;
+  font-size: 18px;
+  font-weight: 700;
+  height: 44px;
+  height: fit-content;
+  overflow: hidden;
+  /* filter:  brightness(130%); */
+  backdrop-filter: contrast(120%) brightness(130%);
+}
+
+
+.icon-svg {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #E9E9E9;
+  overflow: hidden;
+}

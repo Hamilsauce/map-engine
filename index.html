@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <title>a-maze-o svg</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.3.0/rxjs.umd.min.js" integrity="sha512-y3JTS47nnpKORJX8Jn1Rlm+QgRIIZHtu3hWxal0e81avPrqUH48yk+aCi+gprT0RMAcpYa0WCkapxe+bpBHD6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      z-index: 0;
+    }
+
+    html {
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    #app {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr;
+      gap: 0px;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      /* background: #3B3B3B; */
+      color: #EFEFEF;
+
+    }
+
+    .gradient {
+      background-image: linear-gradient(0deg, #323232, #171717),
+        linear-gradient(to right, #1E4B73, #352F34),
+        linear-gradient(to right, #1E4B73, #2F3135);
+      /* background-blend-mode: initial,
+        color-dodge,
+        difference; */
+      background-repeat: no-repeat,
+        no-repeat,
+        no-repeat;
+      background-position: bottom right,
+        left,
+        right;
+
+    }
+
+    #app-body {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    #app-footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      /* background: #191A2015; */
+      /* background: #171717; */
+      width: 100%;
+      height: 100%;
+    }
+
+    #controls {
+      /* display: flex; */
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      /* background: #F21515; */
+      
+      /* background: #191Aa20C7; */
+      /* background: #1E1E1E; */
+      width: 100%;
+      height: 100%;
+      padding: 8px 4px;
+    }
+
+    #controls .icon-path {
+      /* display: flex; */
+      fill: #EFEFEF;
+      stroke:#E4E4E4;
+      stroke-width: 2px;
+    }
+
+    #control-bar {
+      /* display: flex; */
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      /* background: #F21515; */
+      /* background: #191A2015; */
+      width: 100%;
+      height: 100%;
+      padding: 4px;
+    }
+
+
+    .maze {
+      display: grid;
+      gap: 0px;
+      background: #3B3B3B;
+      /* border: 1px solid #3B3B3B; */
+      overflow: scroll;
+      background: #191A2015;
+    }
+
+    .tile {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 0px;
+      border: 0.25px solid #37373750;
+      background: #5F5F5F;
+      color: #EFEFEF;
+    }
+
+    .tile[data-selected=true] {
+      background: #DE9D2AF0;
+    }
+
+    .tile[data-is-start=true] {
+      background: #DE2A2AF0;
+
+    }
+
+    .tile[data-is-exit=true] {
+      background: #26A729;
+    }
+
+    .tile[data-has-character=false][data-is-path-node=true] {
+      /* background: #EBEBEB6B; */
+      backdrop-filter: brightness(200%);
+      filter: brightness(200%);
+      /* backdrop-filter: brightness(130%); */
+    }
+
+
+    /* .tile[data-is-target=true] { */
+    .tile[data-has-character=false][data-is-target=true] {
+      background: #D7AB1A66;
+      border: 1px solid #5F5F5F;
+      transition: 0.75s;
+      animation-name: pulse;
+      animation-direction: alternate;
+      animation-duration: 0.75s;
+      animation-iteration-count: infinite;
+    }
+
+    .tile[data-has-character=true] {
+      background: #D7AB1A;
+    }
+
+    .tile[data-has-character=true][data-is-target=true] {
+      background: #D7AB1A;
+    }
+
+    .tile[data-is-path-node=true][data-is-exit=true] {
+      background: #28AA21;
+      border: 2px solid #EBEBEB;
+    }
+
+
+    .tile[data-tile-type=barrier] {
+      color: #191A2000;
+      background: #232426;
+    }
+
+    /* .tile[data-is-start=true][data-has-character=true] {
+      background: #DE2A2AF0;
+    } */
+
+
+    @keyframes pulse {
+      from {
+        box-shadow: 0 0 10px 8px inset #5F5F5F;
+        background: #D7AB1A;
+
+      }
+
+      to {
+        box-shadow: 0 0 8px 10px inset #5F5F5F;
+        background: #FFCA1A;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gradient" id="app">
+    <header id="app-header">
+      <div id="app-header-left"></div>
+      <div id="app-header-center">
+        <h1>A-MAZE-0 SVG</h1>
+      </div>
+      <div id="app-header-right">
+        <button id="load" class="app-button" type="button">Load</button>
+      </div>
+    </header>
+    <section id="app-body">
+      <div class="container">
+        <div id="move-count">0</div>
+      </div>
+      <div class="container">
+        <div id="maze-container">
+          <!-- <svg id="scene" x="0" y="0" width="412" height="412" viewBox="-50 -50 100 100" _preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+              <pattern id="smallGrid" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
+                <path id="smallGridPath" d="M 2.5 0 H 0 V 2.5" fill="none" stroke="#b3b3b395" stroke-width="0.2" />
+              </pattern>
+              <pattern id="largeGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <rect id="largeGridRect" width="10" height="10" fill="url(#smallGrid)" />
+                <path id="largeGridPath" d="M 10 0 H 0 V 10" fill="none" stroke="#b3b3b399" stroke-width="0.4" />
+              </pattern>
+              <marker id="trianglestart" viewBox="0 0 1 1" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 10 0 L 0 5 L 10 10 z" />
+              </marker>
+              <marker id="triangleend" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" />
+              </marker>
+            </defs>
+            <g class="layer" id="scene-surface" transform="translate(-500,-500)" x="0" y="0">
+              <rect transform="translate(-0,-0)" id="grid" x="0" y="0" width="1000" height="1000" fill="url(#largeGrid)" />
+            </g>
+            <g class="layer" id="objects" transform="translate(0,0)" x="0" y="0">
+              <circle transform="translate(-0,-0)" id="actor" class="point" cx="-25" cy="-25" r="5" _fill="#C7C7C770" />
+            </g>
+            <g id="crosshair" transform="translate(0,0) scale(1)">
+              <path id="crosshair-path" d=" 
+                                  M -5.25,0 -50,0
+                                  M  5.25,0  50,0
+                                  M  0,-5.25 0,-50
+                                  M  0,5.25 0,50
+                                
+                                  M -5.25,-5.25
+                                     5.25,-5.25
+                                     5.25,5.25
+                                    -5.25,5.25
+                                  z
+                              " style="fill:#00000010;stroke:#00000099;stroke-width:0.55;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;" />
+              <line id="crosshair-edge" 
+                   x1="-5.25" 
+                   y1="-5.25" 
+                   x2="5.25" 
+                   y2="-5.25" 
+                         stroke="red"
+                         stroke-width="1"
+                   />
+            </g>
+          </svg> -->
+        </div>
+      </div>
+    </section>
+    <footer id="app-footer">
+
+      <div id="controls" class="container">
+        <button class="move-button app-button" data-direction="left">
+          <svg class="arrow-left" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g class="icon">
+              <path class="icon-path" d=" M 4.1544,32.0152 18.0699,22.3889 31.9853,12.7626 31.9927,32 32,51.2374 18.0772,41.6263 4.1544,32.0152 Z M 59.8456,24.2749 59.8456,39.7251 32,39.7251 32,24.2749 59.8456,24.2749 Z" />
+            </g>
+          </svg>
+        </button>
+        <button class="move-button app-button" data-direction="up">
+          <svg class="arrow-up" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g class="icon">
+              <path class="icon-path" d=" M 31.9848,4.1544 41.6111,18.0699 51.2374,31.9853 32,31.9927 12.7626,32 22.3737,18.0772 31.9848,4.1544 Z M 39.7251,59.8456 24.2749,59.8456 24.2749,32 39.7251,32 39.7251,59.8456 Z" />
+            </g>
+          </svg>
+        </button>
+        <button class="move-button app-button" data-direction="down">
+          <svg class="arrow-down" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g class="icon">
+              <path class="icon-path" d=" M 32.0152,59.8456 22.3889,45.9301 12.7626,32.0147 32,32.0073 51.2374,32 41.6263,45.9228 32.0152,59.8456 Z M 24.2749,4.1544 39.7251,4.1544 39.7251,32 24.2749,32 24.2749,4.1544 Z" />
+            </g>
+          </svg>
+        </button>
+        <button class="move-button app-button" data-direction="right">
+          <svg class="arrow-right" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g class="icon">
+              <path class="icon-path" d=" M 59.8456,31.9848 45.9301,41.6111 32.0147,51.2374 32.0073,32 32,12.7626 45.9228,22.3737 59.8456,31.9848 Z M 4.1544,39.7251 4.1544,24.2749 32,24.2749 32,39.7251 4.1544,39.7251 Z" />
+            </g>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+  <script src="./app.js" type="module"></script>
+  <!-- <script src="./maze-scratch.js" type="module"></script> -->
+  <!-- <script src="./bfs-grid-ex1.js" type="module"></script> -->
+  <template id="tile-template">
+    <div class="tile" data-symbol="" data-tile-type-id="" data-tile-type="" data-id="" data-has-character="false" data-row="0" data-column="0">
+      <div class="tile-content"></div>
+    </div>
+  </template>
+
+  <template id="maze-template">
+    <div class="maze">
+      <div class="tiles"></div>
+    </div>
+  </template>
+
+  <template id="control-bar-template">
+    <div id="control-bar" class="container">
+      <button class="move-button app-button" data-direction="left">
+        <svg class="arrow-left" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g class="icon">
+            <path class="icon-path" d=" M 4.1544,32.0152 18.0699,22.3889 31.9853,12.7626 31.9927,32 32,51.2374 18.0772,41.6263 4.1544,32.0152 Z M 59.8456,24.2749 59.8456,39.7251 32,39.7251 32,24.2749 59.8456,24.2749 Z" />
+          </g>
+        </svg>
+      </button>
+      <button class="move-button app-button" data-direction="up">
+        <svg class="arrow-up" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g class="icon">
+            <path class="icon-path" d=" M 31.9848,4.1544 41.6111,18.0699 51.2374,31.9853 32,31.9927 12.7626,32 22.3737,18.0772 31.9848,4.1544 Z M 39.7251,59.8456 24.2749,59.8456 24.2749,32 39.7251,32 39.7251,59.8456 Z" />
+          </g>
+        </svg>
+      </button>
+      <button class="move-button app-button" data-direction="down">
+        <svg class="arrow-down" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g class="icon">
+            <path class="icon-path" d=" M 32.0152,59.8456 22.3889,45.9301 12.7626,32.0147 32,32.0073 51.2374,32 41.6263,45.9228 32.0152,59.8456 Z M 24.2749,4.1544 39.7251,4.1544 39.7251,32 24.2749,32 24.2749,4.1544 Z" style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-opacity:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dashoffset:0;" />
+          </g>
+        </svg>
+      </button>
+      <button class="move-button app-button" data-direction="right">
+        <svg class="arrow-right" width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g class="icon">
+            <path class="icon-path" d=" M 59.8456,31.9848 45.9301,41.6111 32.0147,51.2374 32.0073,32 32,12.7626 45.9228,22.3737 59.8456,31.9848 Z M 4.1544,39.7251 4.1544,24.2749 32,24.2749 32,39.7251 4.1544,39.7251 Z" />
+          </g>
+        </svg>
+      </button>
+    </div>
+  </template>
+</body>
+
+</html>
