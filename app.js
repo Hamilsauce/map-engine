@@ -6,7 +6,8 @@ import { MapLocationModel, Model, MapModel } from './store/models/index.js';
 import { ControlBarView } from './view/control-bar.view.js';
 import { runPath } from './lib/run-path.js';
 import { MapConverter } from './lib/map-converter.js';
-const { template, TwoWayMap, date, array, utils, text } = ham;
+
+const { download, template, TwoWayMap, date, array, utils, text } = ham;
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { startWith, distinctUntilChanged, takeWhile, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
@@ -65,15 +66,24 @@ export class AppController {
 
     this.#mapControls = new ControlBarView();
 
-    document.querySelector('#load').addEventListener('click', e => {
+    document.querySelector('#load').addEventListener('click', async (e) => {
       const bama3Key = 'm8fz0q8jahe1vwldwbgd';
-      
-      const mapData = JSON.parse(localStorage.getItem('MAP_MAKER')) //|| DEFAULT_STATE;
+
+      const mapData = JSON.parse(localStorage.getItem('MAP_MAKER')) 
       const bama3Rows = mapData.savedMaps[bama3Key];
       console.warn('mapData', bama3Rows)
-
-      const bama3Map = mapConverter.mapToStringRows(bama3Rows)
-      this.loadMap(bama3Map);
+      download('all-maps.json', JSON.stringify(mapData, null, 2))
+      
+      
+      let allMaps = await (await fetch('./all-maps.json')).json();
+      
+       jsonMaps = JSON.stringify(allMaps, null, 2)
+      
+      const preTag = `<pre style="user-select:text;">${jsonMaps}</pre>`
+     localStorage.setItem('MAP_MAKER', jsonMaps)
+      document.querySelector('#app').innerHTML = preTag
+      // const bama3Map = mapConverter.mapToStringRows(bama3Rows)
+      // this.loadMap(bama3Map);
     });
   }
 
