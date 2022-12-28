@@ -6,7 +6,7 @@ import { MapLocationModel, Model, MapModel } from './store/models/index.js';
 import { ControlBarView } from './view/control-bar.view.js';
 import { runPath } from './lib/run-path.js';
 import { MapConverter } from './lib/map-converter.js';
-
+import { HttpService } from './store/services/http.service.js';
 const { download, template, TwoWayMap, date, array, utils, text } = ham;
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
@@ -15,7 +15,17 @@ const { fromFetch } = rxjs.fetch;
 
 
 const mapConverter = new MapConverter();
+const http = new HttpService();
 
+
+const mapsUrl = 'https://hamilsauce.github.io/map-engine/all-maps.json'
+const mapData$ = http.fetch$(mapsUrl);
+
+
+mapData$.pipe(
+    map(x => x),
+    tap(x => console.warn('mapData$', x))
+  ).subscribe()
 
 const bigMapRowsToObject = mapConverter.stringRowsToMap(BIGMAZE)
 
@@ -69,21 +79,22 @@ export class AppController {
     document.querySelector('#load').addEventListener('click', async (e) => {
       const bama3Key = 'm8fz0q8jahe1vwldwbgd';
 
-      const mapData = JSON.parse(localStorage.getItem('MAP_MAKER')) 
+      const mapData = JSON.parse(localStorage.getItem('MAP_MAKER'))
       const bama3Rows = mapData.savedMaps[bama3Key];
-      console.warn('mapData', bama3Rows)
-      download('all-maps.json', JSON.stringify(mapData, null, 2))
-      
-      
-      let allMaps = await (await fetch('./all-maps.json')).json();
-      
-       jsonMaps = JSON.stringify(allMaps, null, 2)
-      
-      const preTag = `<pre style="user-select:text;">${jsonMaps}</pre>`
-     localStorage.setItem('MAP_MAKER', jsonMaps)
-      document.querySelector('#app').innerHTML = preTag
-      // const bama3Map = mapConverter.mapToStringRows(bama3Rows)
-      // this.loadMap(bama3Map);
+      const bama3Map = mapConverter.mapToStringRows(bama3Rows)
+      this.loadMap(bama3Map);
+      // console.warn('mapData', bama3Rows)
+      // download('all-maps.json', JSON.stringify(mapData, null, 2))
+      // const mapsUrl = 'https://hamilsauce.github.io/map-engine/all-maps.json'
+
+      // let allMaps = await (await fetch(mapsUrl)).json();
+      // let allMaps = await (await fetch('./all-maps.json')).json();
+
+      // let jsonMaps = JSON.stringify(allMaps, null, 2)
+
+      // const preTag = `<pre style="user-select:text;">${jsonMaps}</pre>`
+      // localStorage.setItem('MAP_MAKER', jsonMaps)
+      // document.querySelector('#app').innerHTML = preTag
     });
   }
 
