@@ -63,14 +63,6 @@ export class AppController {
       updatedTiles.forEach((model, i) => {
         const tileDom = this.selectViewTile(model.column, model.row);
         this.setTileData(tileDom, model);
-
-        // {
-        //   console.groupCollapsed('tiles:updated')
-        //   console.log('model', model)
-        //   console.log('tileDom', tileDom)
-        //   console.groupEnd('tiles:updated');
-        // }
-
       });
     });
 
@@ -83,7 +75,6 @@ export class AppController {
       const bama3Rows = mapData.savedMaps[bama3Key];
       const bama3Map = mapConverter.mapToStringRows(bama3Rows)
       this.loadMap(bama3Map);
-      // console.warn('mapData', bama3Rows)
       // download('all-maps.json', JSON.stringify(mapData, null, 2))
       // const mapsUrl = 'https://hamilsauce.github.io/map-engine/all-maps.json'
 
